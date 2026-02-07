@@ -77,7 +77,6 @@ services:
       PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
     volumes:
       - ${KOMODO_ROOT_DIRECTORY:-/etc/komodo}:${KOMODO_ROOT_DIRECTORY:-/etc/komodo}
-      - ${KOMODO_COMPOSE_DIRECTORY:-/etc/komodo/compose}:/etc/komodo/compose
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc:/proc:ro
 
