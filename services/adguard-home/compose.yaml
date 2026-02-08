@@ -9,5 +9,6 @@ services:
       - "80:80/tcp"
       - "3000:3000/tcp"
     volumes:
-      - ./data:/opt/adguardhome/work
-      - ./conf:/opt/adguardhome/conf
+      - ./data/work:/opt/adguardhome/work/data
+      - ./data/conf:/opt/adguardhome/conf
+
