@@ -23,16 +23,16 @@ services:
     certbot:
         image: certbot/dns-cloudflare:v5.3.1
         command: >
-          certonly
-          --non-interactive
-          --agree-tos
-          --no-eff-email
-          --email ${CERTBOT_EMAIL}
-          --dns-cloudflare
-          --dns-cloudflare-credentials /root/certbot-creds.ini
-          --cert-name homelab
-          --domain ${KOMODO_DOMAIN}
-          --domain ${ADGUARD_HOME_DOMAIN}
+            certonly
+            --non-interactive
+            --agree-tos
+            --no-eff-email
+            --email ${CERTBOT_EMAIL}
+            --dns-cloudflare
+            --dns-cloudflare-credentials /root/certbot-creds.ini
+            --cert-name homelab
+            --domain ${KOMODO_DOMAIN}
+            --domain ${ADGUARD_HOME_DOMAIN}
         volumes:
             - ./certbot-creds.ini:/root/certbot-creds.ini:ro # chmod 600 ./certbot-cred.ini
             - certbot-etc:/etc/letsencrypt
