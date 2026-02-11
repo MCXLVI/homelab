@@ -6,7 +6,7 @@ services:
         ports:
             - "53:53/tcp"
             - "53:53/udp"
-        evironment:
+        environment:
             ADGUARD_HOME_DEFAULT_WEB_PORT: 3000
         volumes:
             - ./data/work:/opt/adguardhome/work/data
