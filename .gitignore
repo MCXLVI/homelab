@@ -4,6 +4,7 @@
 
 services/nginx/certbot-creds.ini
 
-**/data
-!services/nginx/data/templates
-!services/nginx/data/snippets
+**/data/*
+!services/nginx/data/templates/
+!services/nginx/data/snippets/
+!services/nginx/data/nginx.conf

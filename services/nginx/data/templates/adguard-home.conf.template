@@ -1,0 +1,13 @@
+server {
+    listen                  443 ssl;
+    server_name             ${ADGUARD_HOME_DOMAIN};
+
+    ssl_certificate         /etc/letsencrypt/live/homelab/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/homelab/privkey.pem;
+
+    location / {
+        include             /etc/nginx/snippets/proxy-headers.conf;
+
+        proxy_pass          http://adguard-home:3000;
+    }
+}
