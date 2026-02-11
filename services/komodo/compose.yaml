@@ -111,3 +111,4 @@ networks:
     komodo-internal:
         internal: true
     komodo-periphery:
+        internal: false
