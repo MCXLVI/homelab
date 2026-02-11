@@ -29,13 +29,19 @@ services:
             --no-eff-email
             --email ${CERTBOT_EMAIL}
             --dns-cloudflare
-            --dns-cloudflare-credentials /root/certbot-creds.ini
+            --dns-cloudflare-credentials /run/secrets/certbot-creds
+            --dns-cloudflare-propagation-seconds 30
             --cert-name homelab
             --domain ${KOMODO_DOMAIN}
             --domain ${ADGUARD_HOME_DOMAIN}
+        secrets:
+            - certbot-creds
         volumes:
-            - ./certbot-creds.ini:/root/certbot-creds.ini:ro # chmod 600 ./certbot-cred.ini
             - certbot-etc:/etc/letsencrypt
+
+secrets:
+    certbot-creds:
+        file: ./certbot-creds.ini
 
 volumes:
     certbot-etc:
