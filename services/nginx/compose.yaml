@@ -34,7 +34,7 @@ services:
           --domain ${KOMODO_DOMAIN}
           --domain ${ADGUARD_HOME_DOMAIN}
         volumes:
-            - ./certbot-creds.ini:/root/certbot-creds.ini:ro
+            - ./certbot-creds.ini:/root/certbot-creds.ini:ro # chmod 600 ./certbot-cred.ini
             - certbot-etc:/etc/letsencrypt
 
 volumes:
