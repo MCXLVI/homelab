@@ -1,19 +1,19 @@
-name: komodo
-
 services:
     postgres:
         image: ghcr.io/ferretdb/postgres-documentdb:${KOMODO_POSTGRES_IMAGE_TAG:-17-0.107.0-ferretdb-2.7.0}
         restart: unless-stopped
         labels:
-        komodo.skip:
+            komodo.skip:
         secrets:
             - komodo_db_password
         environment:
-        POSTGRES_USER: ${KOMODO_DB_USERNAME}
-        POSTGRES_PASSWORD_FILE: /run/secrets/komodo_db_password
-        POSTGRES_DB: postgres
+            POSTGRES_USER: ${KOMODO_DB_USERNAME}
+            POSTGRES_PASSWORD_FILE: /run/secrets/komodo_db_password
+            POSTGRES_DB: postgres
         volumes:
             - postgres-data:/var/lib/postgresql/data
+        networks:
+            - komodo-internal
 
     ferretdb:
         image: ghcr.io/ferretdb/ferretdb:${KOMODO_FERRETDB_IMAGE_TAG:-2.7.0}
@@ -28,14 +28,15 @@ services:
             - ferretdb-state:/state
         depends_on:
             - postgres
+        networks:
+            - komodo-internal
 
     core:
+        container_name: komodo-core
         image: ghcr.io/moghtech/komodo-core:${KOMODO_IMAGE_TAG:-latest}
         restart: unless-stopped
         labels:
             komodo.skip:
-        ports:
-            - 9120:9120
         secrets:
             - komodo_init_password
             - komodo_db_password
@@ -44,7 +45,7 @@ services:
             - komodo_jwt_secret
         environment:
             TZ: ${TZ}
-            KOMODO_HOST: ${KOMODO_HOST}
+            KOMODO_HOST: https://${KOMODO_DOMAIN}
             KOMODO_PORT: ${KOMODO_PORT}
             KOMODO_DISABLE_CONFIRM_DIALOG: true
             KOMODO_LOCAL_AUTH: true
@@ -62,6 +63,9 @@ services:
             - ${KOMODO_BACKUPS_PATH:-/etc/komodo/backups}:/backups
         depends_on:
             - ferretdb
+        networks:
+            - proxy-internal
+            - komodo-internal
 
     periphery:
         image: ghcr.io/moghtech/komodo-periphery:${KOMODO_IMAGE_TAG:-latest}
@@ -74,11 +78,13 @@ services:
             TZ: ${TZ}
             PERIPHERY_ROOT_DIRECTORY: ${KOMODO_ROOT_DIRECTORY:-/etc/komodo}
             PERIPHERY_PASSKEYS_FILE: /run/secrets/komodo_passkey
-        PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
+            PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
         volumes:
             - ${KOMODO_ROOT_DIRECTORY:-/etc/komodo}:${KOMODO_ROOT_DIRECTORY:-/etc/komodo}
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /proc:/proc:ro
+        networks:
+            - komodo-internal
 
 secrets:
     komodo_init_password:
@@ -97,3 +103,9 @@ secrets:
 volumes:
     postgres-data:
     ferretdb-state:
+
+networks:
+    proxy-internal:
+        external: true
+    komodo-internal:
+        internal: true
