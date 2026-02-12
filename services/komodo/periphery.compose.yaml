@@ -1,0 +1,27 @@
+services:
+    periphery:
+        image: ghcr.io/moghtech/komodo-periphery:${KOMODO_IMAGE_TAG:-latest}
+        restart: unless-stopped
+        labels:
+            komodo.skip:
+        secrets:
+            - komodo_passkey
+        environment:
+            TZ: ${TZ}
+            PERIPHERY_ROOT_DIRECTORY: ${KOMODO_ROOT_DIRECTORY:-/etc/komodo}
+            PERIPHERY_PASSKEYS_FILE: /run/secrets/komodo_passkey
+            PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
+        volumes:
+            - ${KOMODO_ROOT_DIRECTORY:-/etc/komodo}:${KOMODO_ROOT_DIRECTORY:-/etc/komodo}
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - /proc:/proc:ro
+        networks:
+            - komodo-periphery
+
+secrets:
+    komodo_passkey:
+        environment: KOMODO_PASSKEY
+
+networks:
+    komodo-periphery:
+        internal: false
