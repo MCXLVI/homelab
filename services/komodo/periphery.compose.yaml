@@ -4,6 +4,8 @@ services:
         restart: unless-stopped
         labels:
             komodo.skip:
+        ports:
+            - "8120:8120/tcp"
         secrets:
             - komodo_passkey
         environment:
@@ -15,13 +17,7 @@ services:
             - ${KOMODO_ROOT_DIRECTORY:-/etc/komodo}:${KOMODO_ROOT_DIRECTORY:-/etc/komodo}
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /proc:/proc:ro
-        networks:
-            - komodo-periphery
 
 secrets:
     komodo_passkey:
         environment: KOMODO_PASSKEY
-
-networks:
-    komodo-periphery:
-        internal: false
