@@ -1,7 +1,7 @@
 services:
     nginx:
         container_name: nginx
-        image: nginx:1.29.5
+        image: nginx:1.29.6
         restart: unless-stopped
         ports:
             - "80:80/tcp"
